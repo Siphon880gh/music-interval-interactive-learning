@@ -1,0 +1,7 @@
+a.disabled {
+    cursor: not-allowed;
+}
+
+li {
+    margin-bottom: 10px;
+}
