@@ -45,3 +45,41 @@ function getIntervalDifference(root, point) {
     return diff;
 }
 
+function getIntervalNotation(diff) {
+    switch(diff) {
+        case -1:
+            return "o";
+        case 0:
+            return "u";
+        case 1:
+            return "m2";
+        case 2:
+            return "M2";
+        case 3:
+            return "m3";
+        case 4:
+            return "M3";
+        case 5:
+            return "P4";
+        case 6:
+            return "D5";
+        case 7:
+            return "P5";
+        case 8:
+            return "m6";
+        case 9:
+            return "M6";
+        case 10:
+            return "m7";
+        case 11:
+            return "M7";
+        default:
+            alert("Error: getIntervalNotation case number out of bound")
+    }
+}
+function curryIntervalNotation(root) {
+    return function(point) {
+        let diff = getIntervalDifference(root, point);
+        return getIntervalNotation(diff)
+    }
+}
