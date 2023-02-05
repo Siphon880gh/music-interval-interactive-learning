@@ -15,7 +15,16 @@ window.keys = new Array(38)
 // Setup event listeners
 document.querySelectorAll(".position").forEach(el=>{
     el.addEventListener("click", event=>{
-        el.classList.add("highlighted")
+        const clickMode = document.querySelector("#click-mode").querySelector(".active").id;
+        switch(clickMode) {
+            case "select-root":
+                break;
+            case "get-interval":
+                break;
+            case "highlight-note":
+                el.classList.add("highlighted")
+                break;
+        }
     })
 })
 document.querySelector("#click-mode").addEventListener("click", event=>{
