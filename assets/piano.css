@@ -22,13 +22,18 @@
 
 /* Helps visualize the positioning. Turn off for production: */
 
-.position:nth-child(even) {
+
+/* .position:nth-child(even) {
     background-color: rgba(255, 125, 125, 0.25)
-}
+} */
 
 .position {
-    background-color: rgba(125, 125, 125, 0.5);
+    /* background-color: rgba(125, 125, 125, 0.5); */
     cursor: pointer;
+}
+
+.position.highlighted {
+    background-color: rgba(255, 125, 125, 0.25)
 }
 
 
