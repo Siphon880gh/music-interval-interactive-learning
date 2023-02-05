@@ -18,6 +18,8 @@ document.querySelectorAll(".position").forEach(el=>{
         const clickMode = document.querySelector("#click-mode").querySelector(".active").id;
         switch(clickMode) {
             case "select-root":
+                document.querySelector(".root")?.classList?.remove("root");
+                el.classList.add("root")
                 break;
             case "get-interval":
                 break;

@@ -32,6 +32,22 @@
     cursor: pointer;
 }
 
+.position.root {
+    background-color: rgba(255, 125, 125, 0.25);
+    color: black;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    vertical-align: -50%;
+    text-align: center;
+}
+
+.position.root::after {
+    content: "\f015";
+    display: table-cell;
+    vertical-align: bottom;
+    transform: translateY(180px);
+}
+
 .position.highlighted {
     background-color: rgba(255, 125, 125, 0.25)
 }
