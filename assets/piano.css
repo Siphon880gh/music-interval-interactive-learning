@@ -1,6 +1,6 @@
 #piano {
     width: 803px;
-    height: 125px;
+    height: 215px;
     background-image: url("pianokey_generated.jpg");
     /* Credit: https://www.vecteezy.com/vector-art/2127653-realistic-88-piano-keys-vector-illustration */
     background-color: #cccccc;
@@ -16,6 +16,7 @@
     width: 25px;
     height: 50px;
     float: left;
+    text-align: center;
 }
 
 
@@ -27,11 +28,152 @@
 
 .position {
     background-color: rgba(125, 125, 125, 0.5);
+    cursor: pointer;
 }
 
 
 /* Fix imperfections from the picture */
 
-.position:nth-child(3n) {
+.position:nth-child(3) {
     width: 20px;
+}
+
+.position:nth-child(5) {
+    width: 20px;
+}
+
+
+/* Thin */
+
+.position:nth-child(6) {
+    width: 15px;
+    text-align: center;
+}
+
+.position:nth-child(7) {
+    width: 20px;
+}
+
+.position:nth-child(8) {
+    width: 25px;
+}
+
+.position:nth-child(9) {
+    width: 25px;
+}
+
+.position:nth-child(10) {
+    width: 20px;
+}
+
+.position:nth-child(11) {
+    width: 20px;
+}
+
+.position:nth-child(12) {
+    width: 17px;
+}
+
+.position:nth-child(13) {
+    width: 22px;
+}
+
+.position:nth-child(14) {
+    width: 20px;
+}
+
+.position:nth-child(15) {
+    width: 20px;
+}
+
+.position:nth-child(16) {
+    width: 25px;
+}
+
+.position:nth-child(17) {
+    width: 22px;
+}
+
+.position:nth-child(18) {
+    width: 15px;
+}
+
+.position:nth-child(19) {
+    width: 22px;
+}
+
+.position:nth-child(20) {
+    width: 25px;
+}
+
+.position:nth-child(21) {
+    width: 20px;
+}
+
+.position:nth-child(22) {
+    width: 23px;
+}
+
+.position:nth-child(23) {
+    width: 18px;
+}
+
+.position:nth-child(24) {
+    width: 20px;
+}
+
+.position:nth-child(25) {
+    width: 20px;
+}
+
+.position:nth-child(26) {
+    width: 20px;
+}
+
+.position:nth-child(27) {
+    width: 22px;
+}
+
+.position:nth-child(28) {
+    width: 25px;
+}
+
+.position:nth-child(29) {
+    width: 22px;
+}
+
+.position:nth-child(30) {
+    width: 15px;
+}
+
+.position:nth-child(31) {
+    width: 20px;
+}
+
+.position:nth-child(32) {
+    width: 25px;
+}
+
+.position:nth-child(33) {
+    width: 22px;
+}
+
+.position:nth-child(34) {
+    width: 22px;
+}
+
+.position:nth-child(35) {
+    width: 18px;
+}
+
+.position:nth-child(36) {
+    width: 20px;
+}
+
+.position:nth-child(37) {
+    width: 20px;
+}
+
+.position:nth-child(38) {
+    width: 22px;
 }
