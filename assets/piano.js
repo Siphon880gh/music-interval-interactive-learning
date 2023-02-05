@@ -6,6 +6,7 @@ delete {
     },
     "Intervals":{
         "Calculate interval difference":{},
+        "Clear all notations":{},
     },
 }
 
@@ -22,6 +23,24 @@ document.querySelectorAll(".position").forEach(el=>{
                 el.classList.add("root")
                 break;
             case "get-interval":
+                if(!document.querySelector(".root")) {
+                    alert("Error - You haven't selected a root key!");
+                    return;
+                }
+                const pointKeyPos = parseInt(el.id.replace("pos-", ""));
+                const homeKeyPos = parseInt(document.querySelector(".root").id.replace("pos-", ""));
+                const intervalNotation = curryIntervalNotation(pointKeyPos)(homeKeyPos);
+                console.log({pointKeyPos, homeKeyPos})
+                console.log({intervalNotation})
+
+                clearAllNotations();
+                el.setAttribute("interval-answer", intervalNotation)
+                // document.querySelector("#result-interval").innerHTML = ((inot)=>{
+                //     switch (inot) {
+                //         case "o"
+                //     }
+                // })(intervalNotation);
+
                 break;
             case "highlight-note":
                 el.classList.add("highlighted")
@@ -104,4 +123,10 @@ function curryIntervalNotation(root) {
         let diff = getIntervalDifference(root, point);
         return getIntervalNotation(diff)
     }
+}
+
+// Clear all notations
+function clearAllNotations() {
+    const oldIntervalNotation = document.querySelector("[interval-answer]");
+    if(oldIntervalNotation) oldIntervalNotation.removeAttribute("interval-answer");
 }

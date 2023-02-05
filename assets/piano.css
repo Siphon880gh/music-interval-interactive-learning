@@ -215,3 +215,29 @@
 #click-mode li.active {
     display: inline-block
 }
+
+
+/* Interval Notation */
+
+.position {
+    color: black;
+    font-weight: 900;
+    vertical-align: -50%;
+    text-align: center;
+}
+
+.position[interval-answer]::before {
+    content: attr(interval-answer);
+    display: table-cell;
+    vertical-align: bottom;
+    transform: translateY(180px);
+    color: blue;
+}
+
+
+/* Interval Answer */
+
+#result-interval {
+    margin-top: 20px;
+    font-size: 1.5rem;
+}
