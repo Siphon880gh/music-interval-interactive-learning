@@ -18,6 +18,17 @@ document.querySelectorAll(".position").forEach(el=>{
         el.classList.add("highlighted")
     })
 })
+document.querySelector("#click-mode").addEventListener("click", event=>{
+    if(!event.target.matches(".active")) return;
+    const activeChild = event.target;
+    const parentNode = activeChild.parentNode;
+    const nthChildIndex = Array.prototype.indexOf.call(parentNode.children, activeChild);
+    const nextNthChildIndex = (nthChildIndex+1) % 3;
+    const nextNthChild = parentNode.children[nextNthChildIndex];
+
+    activeChild.classList.remove("active");
+    nextNthChild.classList.add("active");
+})
 
 // Calculate interval difference
 // Test console.log: 1,2->1

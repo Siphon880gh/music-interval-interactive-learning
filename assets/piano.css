@@ -182,3 +182,20 @@
 .position:nth-child(38) {
     width: 22px;
 }
+
+#click-mode {
+    cursor: pointer;
+}
+
+#click-mode ul {
+    margin: 0;
+    padding: 0;
+}
+
+#click-mode li {
+    display: none;
+}
+
+#click-mode li.active {
+    display: inline-block
+}
