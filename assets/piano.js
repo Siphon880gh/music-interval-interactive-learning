@@ -177,12 +177,14 @@ class keyboardSoundInterface {
             this.absoluteOctave = nextIntervalKey.getAttribute("octave");
         }
         this.holdKey = ()=>{
+            function burstSound() {
+                console.log({key:this.key})
+                tunes.play(this.key, this.absoluteOctave)
+            }
+            burstSound.apply(this);
             this.holdingCombos.push(
-                setInterval(()=>{
-                    console.log({key:this.key})
-                    tunes.play(this.key, this.absoluteOctave)
-                },310)
-            ) 
+                setInterval(burstSound.bind(this),310)
+            )
         }
         this.releaseKey = ()=>{
             this.holdingCombos.forEach((holdingCombo)=>{
