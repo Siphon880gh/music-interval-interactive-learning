@@ -4,6 +4,7 @@
     background-image: url("pianokey_generated.jpg");
     /* Credit: https://www.vecteezy.com/vector-art/2127653-realistic-88-piano-keys-vector-illustration */
     background-color: #cccccc;
+    margin: 20px auto;
 }
 
 .position {
@@ -200,7 +201,10 @@
 }
 
 #click-mode {
+    text-align: center;
     cursor: pointer;
+    font-size: 140%;
+    margin-bottom: 40px;
 }
 
 #click-mode ul {
@@ -244,4 +248,5 @@
 #result-interval {
     margin-top: 20px;
     font-size: 1.5rem;
+    text-align: center;
 }

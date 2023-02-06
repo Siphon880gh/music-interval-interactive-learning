@@ -2,7 +2,8 @@
 delete {
     ".Setup":{
         "Setup data structures":{},
-        "Setup event listeners":{}
+        "Setup event listeners":{},
+        "Setup modifier keys":{}
     },
     "Intervals":{
         "Calculate interval difference":{},
@@ -39,11 +40,38 @@ document.querySelectorAll(".position").forEach(el=>{
 
                 clearAllNotations();
                 el.setAttribute("interval-answer", intervalNotation)
-                // document.querySelector("#result-interval").innerHTML = ((inot)=>{
-                //     switch (inot) {
-                //         case "o"
-                //     }
-                // })(intervalNotation);
+                document.querySelector("#result-interval").innerHTML = ((intnt)=>{
+                    switch (intnt) {
+                        case "o":
+                            return "Octave (o)"
+                        case "u":
+                            return "Unison (u)"
+                        case "m2":
+                            return "Minor 2nd (m2)"
+                        case "M2":
+                            return "Major 2nd (M2)"
+                        case "m3":
+                            return "Minor 3rd (m3)"
+                        case "M3":
+                            return "Major 3rd (M3)"
+                        case "P4":
+                            return "Perfect 4th (P4)"
+                        case "D5":
+                            return "Diminished 5th / Augmented 4th (D5/A4)"
+                        case "P5":
+                            return "Perfect 5th (P5)"
+                        case "m6":
+                            return "Minor 6th (m6)"
+                        case "M6":
+                            return "Majror 6th (M6)"
+                        case "m7":
+                            return "Minor 7th (m7)"
+                        case "M7":
+                            return "Major 7th (M7)"
+                        default:
+                            return "Error: Interval not found";
+                    }
+                })(intervalNotation);
 
                 break;
             case "highlight-note":
@@ -63,6 +91,107 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
     activeChild.classList.remove("active");
     nextNthChild.classList.add("active");
 })
+
+// Setup modifier keys
+    document.body.addEventListener('keydown', function(e) {
+        // Possible since 2015 to determine even more modifier key / control details. For example, "Left" or "Right" Alt. Misc is "Standard"
+        var keyLocationDefs = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"];
+        var keyLocation = keyLocationDefs[e.location]; // Web browser api e.location is an integer
+        
+        // Standardize for code
+        e.key=(e.key || e.keyIdentifier || e.keyCode)
+        // console.log({key:e.key});
+
+        // Standardization:
+        // Mac's Option is Window's ALT, is e.altKey
+        // Mac's Control is Window's CTRL, as expected
+        // Mac's CMD is Window's Window/Start key, is e.metaKey
+
+        function hasKey(key) {
+            return key.length===1;
+        }
+
+        if(e.altKey && !e.shiftKey && keyLocation==="Left") {
+            console.log(1);
+        } else if(e.altKey && e.shiftKey && keyLocation==="Left") {
+            console.log(2);
+        } else if(e.altKey && !e.shiftKey && keyLocation==="Right") {
+            console.log(3);
+        } else if(e.altKey && e.shiftKey && keyLocation==="Right") {
+            console.log(4);
+        }
+
+        else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
+            console.log(1);
+        } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="i") {
+            console.log(1);
+        } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="n") {
+            console.log(1);
+        }
+
+
+        return;
+
+
+
+
+        console.log({altOptKey:e.altKey})
+    
+        // Resizing vs Rearranging vs Plain
+        if ((e.metaKey || e.ctrlKey) && (!e.shiftKey && !e.altKey && !hasKey(e.key))) {
+            // changeBoxMode("resizable")
+            // console.log("Try resizing mode")
+        } else if ((e.metaKey || e.ctrlKey) && e.shiftKey && (!e.altKey && !hasKey(e.key))) {
+            // changeBoxMode("rearrange")
+            // console.log("Try rearranging mode")
+        } else { // resets in other cases
+            // changeBoxMode("plain")
+            // console.log("Try plain mode")
+        }
+
+        // [Special + Alt + n]
+        if ((e.metaKey || e.ctrlKey) && e.altKey && (e.key.toLowerCase()==="n"||e.key.toLowerCase()==="dead")) { // Opt+n is a special character on Mac
+            // addBox();
+        // [Special + Alt + t]
+        } else if ((e.metaKey || e.ctrlKey) && e.altKey && (e.key.toLowerCase()==="t"||e.key.toLowerCase()==="†")) { // Opt+n is a special character on Mac
+            // precheckCanDuplicateBox()();
+        // [Special + Alt + Backspace]
+        } else if ((e.metaKey || e.ctrlKey) && e.altKey && e.key.toLowerCase()==="backspace") {
+            // deleteLastBox();
+         
+        // [Special + Shift + ?]
+        } else if((e.metaKey || e.ctrlKey) && e.shiftKey && hasKey(e.key) && (!e.altKey)) {
+            // These can't be simply SPECIAL+P because that usually has other commands
+
+            // Command Palette. 
+            // if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase()==="p") {
+            //     commandPromptUserOpen(e);
+            // } else {
+            //     // return;
+            // }
+            // e.preventDefault();
+            // e.stopPropagation();
+
+        // [Special + ?]
+        } else if((e.metaKey || e.ctrlKey) && !e.shiftKey && hasKey(e.key)) {
+
+            // // After copying/pasting, check for and fix broken handles
+            // if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="v")
+            //     setTimeout(fixLayoutHandles, 100);
+            // else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="e") {
+            //     slideInPageControls();
+            //     toggleEditPreview();
+            //     $("#btn-toggle-edit-preview").animate({color:"white"}, 500, "easeInBounce", function() {
+            //         $("#btn-toggle-edit-preview").css("color", "")
+            //     })
+            //     setTimeout(()=>{
+            //         slideOutPageControls();
+            //     }, 4500)
+            // }
+
+        }
+        
+    });
 
 // Calculate interval difference
 // Test console.log: 1,2->1
