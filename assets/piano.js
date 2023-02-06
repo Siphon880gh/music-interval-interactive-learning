@@ -27,11 +27,11 @@ document.querySelectorAll(".position").forEach(el=>{
                     alert("Error - You haven't selected a root key!");
                     return;
                 }
-                const pointKeyPos = parseInt(el.id.replace("pos-", ""));
                 const homeKeyPos = parseInt(document.querySelector(".root").id.replace("pos-", ""));
-                const intervalNotation = curryIntervalNotation(pointKeyPos)(homeKeyPos);
-                console.log({pointKeyPos, homeKeyPos})
-                console.log({intervalNotation})
+                const pointKeyPos = parseInt(el.id.replace("pos-", ""));
+                const intervalNotation = curryIntervalNotation(homeKeyPos)(pointKeyPos);
+                // console.log({pointKeyPos, homeKeyPos})
+                // console.log({intervalNotation})
 
                 clearAllNotations();
                 el.setAttribute("interval-answer", intervalNotation)
@@ -68,8 +68,9 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 // Test console.log: 1,8->-1
 function getIntervalDifference(root, point) {
     const diff = (function(){
+        console.log({root,point})
         if(root<point) {
-            let aDiff = (point-root)%7;
+            let aDiff = (point-root)%12;
             if(aDiff===0) {
                 return -1; // octave
             }
@@ -77,9 +78,22 @@ function getIntervalDifference(root, point) {
         } else if(root===point) {
             return 0; // unison
         } else {
-            const reframedPoint = point%7;
-            const reframedRoot = root%7;
-            return Math.abs(reframedPoint - reframedRoot);
+            // TODO: UI for future feature of going backwards
+            //       Is this needed for music composition?
+            const reframedPoint = point%12;
+            const reframedRoot = root%12;
+            const relativeDown = Math.abs(reframedPoint - reframedRoot);
+            console.log({relativeDown});
+
+            while(root>point) {
+                root-=12;
+            }
+            let aDiff = (point-root)%12;
+            if(aDiff===0) {
+                return -1; // octave
+            }
+            return aDiff;
+
         }
 
     })();

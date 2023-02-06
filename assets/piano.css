@@ -228,6 +228,7 @@
 
 .position[interval-answer] {
     background-color: rgba(255, 125, 125, 0.25);
+    color: black;
 }
 
 .position[interval-answer]::before {
