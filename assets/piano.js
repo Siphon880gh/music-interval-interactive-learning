@@ -1,15 +1,24 @@
 // For VS Editor Outline
 delete {
-    ".Setup":{
+    "Setup::":{
+        "Setup midi adapter":{},
         "Setup data structures":{},
         "Setup event listeners":{},
         "Setup modifier keys":{}
     },
-    "Intervals":{
+    "Intervals::":{
         "Calculate interval difference":{},
         "Clear all notations":{},
     },
 }
+
+// Setup midi adapter
+class midiAdapter {
+    constructor() {
+        return new NotesPlayer();
+    }
+}
+const tunes = new midiAdapter();
 
 // Setup data structures. Initiate with number of keys
 window.keys = new Array(38)
@@ -131,7 +140,15 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 class keyboardSoundInterface {
     constructor() {
         this.octave = 0;
+        this.key = "C"
+        this.holdingCombos = []; // Eg. [EEEEE, SSSSS, DDDDD] held then let go later. These are actually setInterval ID's for clearInterval when releasing
+
         this.selectKey = (intervalNotation)=>{
+            // Model for midi adapter
+            // TODO: Convert intervalNotation to key
+            this.key = "C";
+
+            // Visually
             let homeKey = document.querySelector(".root");
             if(!homeKey) {
 
@@ -156,10 +173,16 @@ class keyboardSoundInterface {
             nextIntervalKey.setAttribute("interval-answer", intervalNotation);
         }
         this.holdKey = ()=>{
-            
+            this.holdingCombos.push(
+                setInterval(()=>{
+                    tunes.play(this.key, 0)
+                },310)
+            ) 
         }
         this.releaseKey = ()=>{
-            
+            this.holdingCombos.forEach((holdingCombo)=>{
+                clearInterval(holdingCombo)
+            })
         }
         /**
          * 
@@ -171,12 +194,6 @@ class keyboardSoundInterface {
         this.eyesBackToRootOctave = () => {
             this.octave = 0;
         }
-
-    }
-}
-
-class midiAdapter {
-    constructor() {
 
     }
 }
@@ -197,6 +214,11 @@ const kbsi = new keyboardSoundInterface();
 // document.querySelector("#octaves").addEventListener('mouseout', function(e) {
 //     kbsi.eyesBackToRootOctave();
 // });
+document.body.addEventListener('keyup', function(e) {
+    console.log("RELEASED KEY")
+    kbsi.releaseKey();
+});
+
 document.body.addEventListener('keydown', function(e) {
 
         // Standardize for code
@@ -250,19 +272,26 @@ document.body.addEventListener('keydown', function(e) {
             // console.log({location:e.location,keyLocation,octaves,code:e.code})
 
             if(e.code==="KeyW") { // minor
-                kbsi.selectKey(isMajor?"u":"u");
+                kbsi.selectKey(isMajor?"u":"u"); 
+                kbsi.holdKey();
             } else if(e.code==="KeyA") { 
                 kbsi.selectKey(isMajor?"M7":"m7");
+                kbsi.holdKey();
             } else if(e.code==="KeyS") { 
                 kbsi.selectKey(isMajor?"P5":"D5");
+                kbsi.holdKey();
             } else if(e.code==="KeyD") { 
                 kbsi.selectKey(isMajor?"M3":"m3");
+                kbsi.holdKey();
             } else if(e.code==="KeyE") { 
                 kbsi.selectKey(isMajor?"M2":"m2");
+                kbsi.holdKey();
             } else if(e.code==="KeyF") { 
                 kbsi.selectKey(isMajor?"P4":"A4");
+                kbsi.holdKey();
             } else if(e.code==="KeyC") { 
                 kbsi.selectKey(isMajor?"M6":"m6");
+                kbsi.holdKey();
             }
 
         } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
@@ -278,70 +307,7 @@ document.body.addEventListener('keydown', function(e) {
             clickModeEl.querySelector(".active")?.classList?.remove("active");
             clickModeEl.querySelector("li#highlight-note").classList.add("active");
         }
-
-
-        return;
-
-
-
-
-        console.log({altOptKey:e.altKey})
-    
-        // Resizing vs Rearranging vs Plain
-        if ((e.metaKey || e.ctrlKey) && (!e.shiftKey && !e.altKey && !hasKey(e.key))) {
-            // changeBoxMode("resizable")
-            // console.log("Try resizing mode")
-        } else if ((e.metaKey || e.ctrlKey) && e.shiftKey && (!e.altKey && !hasKey(e.key))) {
-            // changeBoxMode("rearrange")
-            // console.log("Try rearranging mode")
-        } else { // resets in other cases
-            // changeBoxMode("plain")
-            // console.log("Try plain mode")
-        }
-
-        // [Special + Alt + n]
-        if ((e.metaKey || e.ctrlKey) && e.altKey && (e.key.toLowerCase()==="n"||e.key.toLowerCase()==="dead")) { // Opt+n is a special character on Mac
-            // addBox();
-        // [Special + Alt + t]
-        } else if ((e.metaKey || e.ctrlKey) && e.altKey && (e.key.toLowerCase()==="t"||e.key.toLowerCase()==="†")) { // Opt+n is a special character on Mac
-            // precheckCanDuplicateBox()();
-        // [Special + Alt + Backspace]
-        } else if ((e.metaKey || e.ctrlKey) && e.altKey && e.key.toLowerCase()==="backspace") {
-            // deleteLastBox();
-         
-        // [Special + Shift + ?]
-        } else if((e.metaKey || e.ctrlKey) && e.shiftKey && hasKey(e.key) && (!e.altKey)) {
-            // These can't be simply SPECIAL+P because that usually has other commands
-
-            // Command Palette. 
-            // if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase()==="p") {
-            //     commandPromptUserOpen(e);
-            // } else {
-            //     // return;
-            // }
-            // e.preventDefault();
-            // e.stopPropagation();
-
-        // [Special + ?]
-        } else if((e.metaKey || e.ctrlKey) && !e.shiftKey && hasKey(e.key)) {
-
-            // // After copying/pasting, check for and fix broken handles
-            // if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="v")
-            //     setTimeout(fixLayoutHandles, 100);
-            // else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase()==="e") {
-            //     slideInPageControls();
-            //     toggleEditPreview();
-            //     $("#btn-toggle-edit-preview").animate({color:"white"}, 500, "easeInBounce", function() {
-            //         $("#btn-toggle-edit-preview").css("color", "")
-            //     })
-            //     setTimeout(()=>{
-            //         slideOutPageControls();
-            //     }, 4500)
-            // }
-
-        }
-        
-    });
+}); // Modifier keys
 
 // Calculate interval difference
 // Test console.log: 1,2->1
