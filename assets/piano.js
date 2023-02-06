@@ -121,6 +121,7 @@ function getNextSibling(steps, activeChild, rotates=true) {
             }
         }
     })();
+    console.log({nthChildIndex,element:parentNode.children[nextNthChildIndex]});
     if(nextNthChildIndex===-1) 
         return -1
     else 
@@ -219,7 +220,7 @@ const kbsi = new keyboardSoundInterface();
 //     kbsi.eyesBackToRootOctave();
 // });
 document.body.addEventListener('keyup', function(e) {
-    console.log("RELEASED KEY")
+    console.log("RELEASED KEY: " + e.key)
     kbsi.releaseKey();
 });
 
@@ -258,7 +259,7 @@ document.body.addEventListener('keydown', function(e) {
 
         // console.log("Test case minor");
         // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode, code: e.code})
-        console.log({keyLocation,code:e.cod3})
+        console.log({keyLocation,code:e.code})
 
         // Major
         if([
@@ -268,7 +269,21 @@ document.body.addEventListener('keydown', function(e) {
             "KeyD", 
             "KeyE", 
             "KeyF", 
-            "KeyC",
+            "KeyC", 
+            "Digit1",
+            "Digit2",
+            "Digit3",
+            "Digit4",
+            "Digit5",
+            "Digit6",
+            "Digit7",
+            "Numpad1",
+            "Numpad2",
+            "Numpad3",
+            "Numpad4",
+            "Numpad5",
+            "Numpad6",
+            "Numpad7",
         ].includes(e.code)) {
             e.preventDefault();
 
@@ -295,6 +310,27 @@ document.body.addEventListener('keydown', function(e) {
                 kbsi.holdKey();
             } else if(e.code==="KeyC") { 
                 kbsi.selectKey(isMajor?"M6":"m6");
+                kbsi.holdKey();
+            } else if(e.code==="Digit1" || e.code==="Numpad1") { 
+                kbsi.selectKey("u");
+                kbsi.holdKey();
+            } else if(e.code==="Digit2" || e.code==="Numpad2") { 
+                kbsi.selectKey("M2");
+                kbsi.holdKey();
+            } else if(e.code==="Digit3" || e.code==="Numpad3") { 
+                kbsi.selectKey("M3");
+                kbsi.holdKey();
+            } else if(e.code==="Digit4" || e.code==="Numpad4") { 
+                kbsi.selectKey("P4");
+                kbsi.holdKey();
+            } else if(e.code==="Digit5" || e.code==="Numpad5") { 
+                kbsi.selectKey("P5");
+                kbsi.holdKey();
+            } else if(e.code==="Digit6" || e.code==="Numpad6") { 
+                kbsi.selectKey("M6");
+                kbsi.holdKey();
+            } else if(e.code==="Digit7" || e.code==="Numpad7") { 
+                kbsi.selectKey("M7");
                 kbsi.holdKey();
             }
 
