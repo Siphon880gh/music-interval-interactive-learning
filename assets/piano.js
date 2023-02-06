@@ -122,11 +122,17 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
         }
 
         else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
-            console.log(1);
+            const clickModeEl = document.querySelector("#click-mode");
+            clickModeEl.querySelector(".active")?.classList?.remove("active");
+            clickModeEl.querySelector("li#select-root").classList.add("active");
         } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="i") {
-            console.log(1);
+            const clickModeEl = document.querySelector("#click-mode");
+            clickModeEl.querySelector(".active")?.classList?.remove("active");
+            clickModeEl.querySelector("li#get-interval").classList.add("active");
         } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="n") {
-            console.log(1);
+            const clickModeEl = document.querySelector("#click-mode");
+            clickModeEl.querySelector(".active")?.classList?.remove("active");
+            clickModeEl.querySelector("li#highlight-note").classList.add("active");
         }
 
 
