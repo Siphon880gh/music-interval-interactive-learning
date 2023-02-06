@@ -93,6 +93,8 @@ document.querySelectorAll(".position").forEach(el=>{
  * 
  * @param {*} activeChild   Current node to find the next sibling element
  * @param {*} rotates       default true. Rotates back when iterated out of N+1, where N is the total number of siblings and the current node.
+ * 
+ * @returns                 The same element, a sibling steps away, or -1 if out of bound and rotate is false
  */
 function getNextSibling(steps, activeChild, rotates=true) {
     if(steps===0) 
@@ -110,8 +112,10 @@ function getNextSibling(steps, activeChild, rotates=true) {
             }
         }
     })();
-    const nextNthChild = parentNode.children[nextNthChildIndex];
-    return nextNthChild;
+    if(nextNthChildIndex===-1) 
+        return -1
+    else 
+        return parentNode.children[nextNthChildIndex];
 } // getNextSibling
 
 document.querySelector("#click-mode").addEventListener("click", event=>{
@@ -126,7 +130,8 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 // Setup modifier keys
 class keyboardSoundInterface {
     constructor() {
-        this.selectKey = (intervalNotation, octaves=0)=>{
+        this.octave = 0;
+        this.selectKey = (intervalNotation)=>{
             let homeKey = document.querySelector(".root");
             if(!homeKey) {
 
@@ -138,11 +143,16 @@ class keyboardSoundInterface {
             clearAllNotations();
             const steps = ((intnt)=>{
                 if(intnt==='o') return 0;
-                if(intnt==='A4' || intnt==='D5') return 6;
-                return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt);
+                if(intnt==='A4' || intnt==='D5') return 6 + (this.octave*12);
+                return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt) + (this.octave*12);
             })(intervalNotation)
-            console.log({intervalNotation, steps});
+            // console.log({intervalNotation, steps});
             const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
+            if(nextIntervalKey===-1) {
+                console.log("Error: Out of bound with piano keyboard");
+                return;
+            }
+            console.log(nextIntervalKey)
             nextIntervalKey.setAttribute("interval-answer", intervalNotation);
         }
         this.holdKey = ()=>{
@@ -150,6 +160,16 @@ class keyboardSoundInterface {
         }
         this.releaseKey = ()=>{
             
+        }
+        /**
+         * 
+         * @param {*} octaveStep -2,-1,0,1,2
+         */
+        this.eyesOnAnotherOctave = (octaveStep) => {
+            this.octave = octaveStep
+        }
+        this.eyesBackToRootOctave = () => {
+            this.octave = 0;
         }
 
     }
@@ -160,20 +180,27 @@ class midiAdapter {
 
     }
 }
-// function notateAndPlay() {
-
-// }
-
-var arr = [];
 
 const kbsi = new keyboardSoundInterface();
+// Alternately: Mouseover mechanism for changing octaves. Maybe for Guitar later.
+// document.querySelector("#octaves").addEventListener('mouseover', function(e) {
+//     if(e.target.matches(".octave:nth-child(1)")) {
+//         kbsi.eyesOnAnotherOctave(-2)
+//     } else if(e.target.matches(".octave:nth-child(2)")) {
+//         kbsi.eyesOnAnotherOctave(-1)
+//     } else if(e.target.matches(".octave:nth-child(3)")) {
+//         kbsi.eyesOnAnotherOctave(1)
+//     } else if(e.target.matches(".octave:nth-child(4)")) {
+//         kbsi.eyesOnAnotherOctave(2)
+//     }
+// });
+// document.querySelector("#octaves").addEventListener('mouseout', function(e) {
+//     kbsi.eyesBackToRootOctave();
+// });
 document.body.addEventListener('keydown', function(e) {
-        // Possible since 2015 to determine even more modifier key / control details. For example, "Left" or "Right" Alt. Misc is "Standard"
-        var keyLocationDefs = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"];
-        var keyLocation = keyLocationDefs[e.location]; // Web browser api e.location is an integer
-        
+
         // Standardize for code
-        e.key=(e.key || e.keyIdentifier || e.keyCode)
+        // e.key=(e.key || e.keyIdentifier || e.keyCode)
         // console.log({key:e.key});
 
         // Standardization:
@@ -184,14 +211,28 @@ document.body.addEventListener('keydown', function(e) {
         function hasKey(key) {
             return key.length===1;
         }
+        let isMajor = !e.shiftKey;
+
+        // Possible since 2015 to determine even more modifier key / control details. For example, "Left" or "Right" Alt. Misc is "Standard"
+        var keyLocationDefs = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"];
+        var keyLocation = keyLocationDefs[e.location]; // Web browser api e.location is an integer
+
+        let octaves = 0;
+        if(keyLocation==="Left" && e.altKey && !e.ctrlKey)
+            kbsi.eyesOnAnotherOctave(-1);
+        else if(keyLocation==="Left" && e.altKey && e.ctrlKey)
+            kbsi.eyesOnAnotherOctave(-2);
+        else if(keyLocation==="Right" && e.altKey && !e.ctrlKey)
+            kbsi.eyesOnAnotherOctave(1);
+        else if(keyLocation==="Right" && e.altKey && e.ctrlKey)
+            kbsi.eyesOnAnotherOctave(2);
+        // This is necessary because detecting keyLocation will revert back to Standard once a key is hit regardless if a modifier key is on
+        else if(!e.altKey && !e.ctrlKey)
+            kbsi.eyesBackToRootOctave();
+
         // console.log("Test case minor");
-        // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode})
-        
-
-        // arr.push(e.code);
-        // console.log(arr.toString());
-
-        console.log(e.code)
+        // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode, code: e.code})
+        console.log({keyLocation,code:e.cod3})
 
         // Major
         if([
@@ -205,32 +246,23 @@ document.body.addEventListener('keydown', function(e) {
         ].includes(e.code)) {
             e.preventDefault();
 
-            let isMajor = !e.shiftKey;
 
-            let octaves = 0;
-            if(keyLocation==="Left" && e.altKey && !e.ctrlKey)
-                octaves = -1;
-            else if(keyLocation==="Left" && e.altKey && e.ctrlKey)
-                octaves = -2;
-            else if(keyLocation==="Right" && e.altKey && !e.ctrlKey)
-                octaves = 1;
-            else if(keyLocation==="Right" && e.altKey && e.ctrlKey)
-                octaves = 2;
+            // console.log({location:e.location,keyLocation,octaves,code:e.code})
 
             if(e.code==="KeyW") { // minor
-                kbsi.selectKey(isMajor?"u":"u", octaves);
+                kbsi.selectKey(isMajor?"u":"u");
             } else if(e.code==="KeyA") { 
-                kbsi.selectKey(isMajor?"M7":"m7", octaves);
+                kbsi.selectKey(isMajor?"M7":"m7");
             } else if(e.code==="KeyS") { 
-                kbsi.selectKey(isMajor?"P5":"D5", octaves);
+                kbsi.selectKey(isMajor?"P5":"D5");
             } else if(e.code==="KeyD") { 
-                kbsi.selectKey(isMajor?"M3":"m3", octaves);
+                kbsi.selectKey(isMajor?"M3":"m3");
             } else if(e.code==="KeyE") { 
-                kbsi.selectKey(isMajor?"M2":"m2", octaves);
+                kbsi.selectKey(isMajor?"M2":"m2");
             } else if(e.code==="KeyF") { 
-                kbsi.selectKey(isMajor?"P4":"A4", octaves);
+                kbsi.selectKey(isMajor?"P4":"A4");
             } else if(e.code==="KeyC") { 
-                kbsi.selectKey(isMajor?"M6":"m6", octaves);
+                kbsi.selectKey(isMajor?"M6":"m6");
             }
 
         } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
