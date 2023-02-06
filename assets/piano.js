@@ -127,20 +127,23 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 class keyboardSoundInterface {
     constructor() {
         this.selectKey = (intervalNotation, octaves=0)=>{
-            const homeKey = document.querySelector(".root");
-            if(homeKey) {
-                clearAllNotations();
-                const steps = ((intnt)=>{
-                    if(intnt==='o') return 0;
-                    if(intnt==='A4' || intnt==='D5') return 6;
-                    return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt);
-                })(intervalNotation)
-                console.log({intervalNotation, steps});
-                const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
-                nextIntervalKey.setAttribute("interval-answer", intervalNotation)
-            } else {
-                console.log("Error: Home key not selected, so unable to build music interval");
+            let homeKey = document.querySelector(".root");
+            if(!homeKey) {
+
+                // console.log("Error: Home key not selected, so unable to build music interval");
+                homeKey = document.querySelector(".position:nth-child(4)");
+                homeKey.classList.add("root")
             }
+
+            clearAllNotations();
+            const steps = ((intnt)=>{
+                if(intnt==='o') return 0;
+                if(intnt==='A4' || intnt==='D5') return 6;
+                return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt);
+            })(intervalNotation)
+            console.log({intervalNotation, steps});
+            const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
+            nextIntervalKey.setAttribute("interval-answer", intervalNotation);
         }
         this.holdKey = ()=>{
             
@@ -161,6 +164,8 @@ class midiAdapter {
 
 // }
 
+var arr = [];
+
 const kbsi = new keyboardSoundInterface();
 document.body.addEventListener('keydown', function(e) {
         // Possible since 2015 to determine even more modifier key / control details. For example, "Left" or "Right" Alt. Misc is "Standard"
@@ -180,11 +185,27 @@ document.body.addEventListener('keydown', function(e) {
             return key.length===1;
         }
         // console.log("Test case minor");
-        console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode})
+        // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode})
+        
+
+        // arr.push(e.code);
+        // console.log(arr.toString());
+
+        console.log(e.code)
 
         // Major
-        if(e.key.length===1 && "wasdefcWASDEFC".includes(e.key)) {
+        if([
+            "KeyW", 
+            "KeyA", 
+            "KeyS", 
+            "KeyD", 
+            "KeyE", 
+            "KeyF", 
+            "KeyC",
+        ].includes(e.code)) {
             e.preventDefault();
+
+            let isMajor = !e.shiftKey;
 
             let octaves = 0;
             if(keyLocation==="Left" && e.altKey && !e.ctrlKey)
@@ -196,35 +217,22 @@ document.body.addEventListener('keydown', function(e) {
             else if(keyLocation==="Right" && e.altKey && e.ctrlKey)
                 octaves = 2;
 
-            if(e.key==="w") { // minor
-                kbsi.selectKey("u", octaves);
-            } else if(e.key==="d") { 
-                kbsi.selectKey("M3", octaves);
-            } else if(e.key==="s") { 
-                kbsi.selectKey("P5", octaves);
-            } else if(e.key==="a") { 
-                kbsi.selectKey("M7", octaves);
-            } else if(e.key==="e") { 
-                kbsi.selectKey("M2", octaves);
-            } else if(e.key==="f") { 
-                kbsi.selectKey("P4", octaves);
-            } else if(e.key==="c") { 
-                kbsi.selectKey("M6", octaves);
-            } else if(e.key==="W") { // Major
-                kbsi.selectKey("u", octaves);
-            } else if(e.key==="D") { 
-                kbsi.selectKey("m3", octaves);
-            } else if(e.key==="S") { 
-                kbsi.selectKey("D5", octaves);
-            } else if(e.key==="A") { 
-                kbsi.selectKey("m7", octaves);
-            } else if(e.key==="E") { 
-                kbsi.selectKey("m2", octaves);
-            } else if(e.key==="F") { 
-                kbsi.selectKey("A4", octaves);
-            } else if(e.key==="C") { 
-                kbsi.selectKey("m6", octaves);
+            if(e.code==="KeyW") { // minor
+                kbsi.selectKey(isMajor?"u":"u", octaves);
+            } else if(e.code==="KeyA") { 
+                kbsi.selectKey(isMajor?"M7":"m7", octaves);
+            } else if(e.code==="KeyS") { 
+                kbsi.selectKey(isMajor?"P5":"D5", octaves);
+            } else if(e.code==="KeyD") { 
+                kbsi.selectKey(isMajor?"M3":"m3", octaves);
+            } else if(e.code==="KeyE") { 
+                kbsi.selectKey(isMajor?"M2":"m2", octaves);
+            } else if(e.code==="KeyF") { 
+                kbsi.selectKey(isMajor?"P4":"A4", octaves);
+            } else if(e.code==="KeyC") { 
+                kbsi.selectKey(isMajor?"M6":"m6", octaves);
             }
+
         } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
             const clickModeEl = document.querySelector("#click-mode");
             clickModeEl.querySelector(".active")?.classList?.remove("active");
