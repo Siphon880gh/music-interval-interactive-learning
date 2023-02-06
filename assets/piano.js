@@ -110,26 +110,63 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
         function hasKey(key) {
             return key.length===1;
         }
+        // console.log("Test case minor");
+        // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length})
 
-        if(e.altKey && !e.shiftKey && keyLocation==="Left") {
+        // Major
+        if(!e.metaKey && !e.altKey && !e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key)) {
+            if(e.key==="w") {
+                console.log("u");
+            } else if(e.key==="d") { 
+                console.log("M3");
+            } else if(e.key==="s") { 
+                console.log("P5");
+            } else if(e.key==="a") { 
+                console.log("M7");
+            } else if(e.key==="e") { 
+                console.log("M2");
+            } else if(e.key==="f") { 
+                console.log("P4");
+            } else if(e.key==="c") { 
+                console.log("M6");
+            }
+        // Minor
+        } else if(!e.metaKey && !e.altKey && e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key.toLowerCase())) {
+            if(e.key.toLowerCase()==="w") {
+                console.log("u");
+            } else if(e.key.toLowerCase()==="d") { 
+                console.log("m3");
+            } else if(e.key.toLowerCase()==="s") { 
+                console.log("D5");
+            } else if(e.key.toLowerCase()==="a") { 
+                console.log("m7");
+            } else if(e.key.toLowerCase()==="e") { 
+                console.log("m2");
+            } else if(e.key.toLowerCase()==="f") { 
+                console.log("A4");
+            } else if(e.key.toLowerCase()==="c") { 
+                console.log("m6");
+            }
+        }
+        else if(e.metaKey && !e.altKey && keyLocation==="Left") {
             console.log(1);
-        } else if(e.altKey && e.shiftKey && keyLocation==="Left") {
+        } else if(e.metaKey && e.altKey && keyLocation==="Left") {
             console.log(2);
-        } else if(e.altKey && !e.shiftKey && keyLocation==="Right") {
+        } else if(e.metaKey && !e.altKey && keyLocation==="Right") {
             console.log(3);
-        } else if(e.altKey && e.shiftKey && keyLocation==="Right") {
+        } else if(e.metaKey && e.altKey && keyLocation==="Right") {
             console.log(4);
         }
 
-        else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
+        else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
             const clickModeEl = document.querySelector("#click-mode");
             clickModeEl.querySelector(".active")?.classList?.remove("active");
             clickModeEl.querySelector("li#select-root").classList.add("active");
-        } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="i") {
+        } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="i") {
             const clickModeEl = document.querySelector("#click-mode");
             clickModeEl.querySelector(".active")?.classList?.remove("active");
             clickModeEl.querySelector("li#get-interval").classList.add("active");
-        } else if (!e.altKey && !e.shiftKey && e.key.toLowerCase()==="n") {
+        } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="n") {
             const clickModeEl = document.querySelector("#click-mode");
             clickModeEl.querySelector(".active")?.classList?.remove("active");
             clickModeEl.querySelector("li#highlight-note").classList.add("active");
