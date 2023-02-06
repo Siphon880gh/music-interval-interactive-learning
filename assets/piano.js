@@ -19,6 +19,7 @@ document.querySelectorAll(".position").forEach(el=>{
         const clickMode = document.querySelector("#click-mode").querySelector(".active").id;
         switch(clickMode) {
             case "select-root":
+                clearAllNotations();
                 document.querySelector(".root")?.classList?.remove("root");
                 el.classList.add("root")
                 break;
