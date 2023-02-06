@@ -82,7 +82,7 @@ o.start();
 // g.gain.setTargetAtTime(0, context.currentTime + SECONDS_OF_PLAYING, TRANSITIONING);
 // TRANSITIONING is the timeConstraint parameter:
 // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
-g.gain.setTargetAtTime(0, context.currentTime + .3, 1);
+g.gain.setTargetAtTime(0, context.currentTime + .3, 0);
 }
 
 /**  

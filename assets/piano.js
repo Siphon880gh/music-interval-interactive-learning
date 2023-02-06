@@ -139,16 +139,13 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 // Setup modifier keys
 class keyboardSoundInterface {
     constructor() {
-        this.octave = 0;
+        this.octave = 0; // This is user chosen octave
+        this.absoluteOctave = 0; // This is absolute octave to the instrument layout for translating into numeric pitches for MIDI Adapter
         this.key = "C"
         this.holdingCombos = []; // Eg. [EEEEE, SSSSS, DDDDD] held then let go later. These are actually setInterval ID's for clearInterval when releasing
 
         this.selectKey = (intervalNotation)=>{
-            // Model for midi adapter
-            // TODO: Convert intervalNotation to key
-            this.key = "C";
-
-            // Visually
+            // Make sure there's a root / home
             let homeKey = document.querySelector(".root");
             if(!homeKey) {
 
@@ -157,6 +154,7 @@ class keyboardSoundInterface {
                 homeKey.classList.add("root")
             }
 
+            // Visually
             clearAllNotations();
             const steps = ((intnt)=>{
                 if(intnt==='o') return 0;
@@ -171,11 +169,17 @@ class keyboardSoundInterface {
             }
             console.log(nextIntervalKey)
             nextIntervalKey.setAttribute("interval-answer", intervalNotation);
+
+            // Model for midi adapter
+            // Refers HTML: <div id="pos-1" octave="-2" note="A" class="position">1</div>
+            this.key = nextIntervalKey.getAttribute("note");
+            this.absoluteOctave = nextIntervalKey.getAttribute("octave");
         }
         this.holdKey = ()=>{
             this.holdingCombos.push(
                 setInterval(()=>{
-                    tunes.play(this.key, 0)
+                    console.log({key:this.key})
+                    tunes.play(this.key, this.absoluteOctave)
                 },310)
             ) 
         }

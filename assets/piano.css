@@ -1,3 +1,7 @@
+body {
+    text-align: center;
+}
+
 #piano {
     width: 803px;
     height: 215px;
@@ -198,6 +202,10 @@
 
 .position:nth-child(38) {
     width: 22px;
+}
+
+#legend-interval-shortcuts {
+    font-size: 140%;
 }
 
 #click-mode {
