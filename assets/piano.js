@@ -25,8 +25,11 @@ document.querySelectorAll(".position").forEach(el=>{
                 break;
             case "get-interval":
                 if(!document.querySelector(".root")) {
-                    alert("Error - You haven't selected a root key!");
+                    // alert("Error - You haven't selected a root key!");
+                    // return;
+                    el.classList.add("root")
                     return;
+
                 }
                 const homeKeyPos = parseInt(document.querySelector(".root").id.replace("pos-", ""));
                 const pointKeyPos = parseInt(el.id.replace("pos-", ""));
