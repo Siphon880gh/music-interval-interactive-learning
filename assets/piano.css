@@ -2,6 +2,18 @@ body {
     text-align: center;
 }
 
+.border {
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 15px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.pt-10px {
+    padding-top: 10px;
+}
+
 #piano {
     width: 803px;
     height: 215px;
