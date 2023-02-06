@@ -80,20 +80,86 @@ document.querySelectorAll(".position").forEach(el=>{
         }
     })
 })
+
+/**
+ * 
+ * function getNextSibling
+ * 
+ * Receives an element, then gets the next sibling element. Direct ancestor must be the parent of all the siblings. 
+ * Option to cycle to the first element if iterated out of N where N is the total number of siblings including the current node.
+ * Returns -1 if you are not cycling and iterated out of N.
+ * Returns x+1 if have next sibling, or returns 0 if cycled back.
+ * 
+ * 
+ * @param {*} activeChild   Current node to find the next sibling element
+ * @param {*} rotates       default true. Rotates back when iterated out of N+1, where N is the total number of siblings and the current node.
+ */
+function getNextSibling(steps, activeChild, rotates=true) {
+    if(steps===0) 
+        return activeChild;
+    const parentNode = activeChild.parentNode;
+    const nthChildIndex = Array.prototype.indexOf.call(parentNode.children, activeChild);
+    const nextNthChildIndex = (function() {
+        if(rotates)
+            return (nthChildIndex+steps) % parentNode.children.length;
+        else {
+            if(nthChildIndex+1>parentNode.children.length) {
+                return -1;
+            } else {
+                return nthChildIndex+steps;
+            }
+        }
+    })();
+    const nextNthChild = parentNode.children[nextNthChildIndex];
+    return nextNthChild;
+} // getNextSibling
+
 document.querySelector("#click-mode").addEventListener("click", event=>{
     if(!event.target.matches(".active")) return;
     const activeChild = event.target;
-    const parentNode = activeChild.parentNode;
-    const nthChildIndex = Array.prototype.indexOf.call(parentNode.children, activeChild);
-    const nextNthChildIndex = (nthChildIndex+1) % 3;
-    const nextNthChild = parentNode.children[nextNthChildIndex];
+    const nextNthChild = getNextSibling(1, activeChild, true); // true, cycling back for index exceeding length
 
     activeChild.classList.remove("active");
     nextNthChild.classList.add("active");
 })
 
 // Setup modifier keys
-    document.body.addEventListener('keydown', function(e) {
+class keyboardSoundInterface {
+    constructor() {
+        this.holdKey = (intervalNotation, octaves=0)=>{
+            const homeKey = document.querySelector(".root");
+            if(homeKey) {
+                clearAllNotations();
+                const steps = ((intnt)=>{
+                    if(intnt==='o') return 0;
+                    if(intnt==='A4' || intnt==='D5') return 6;
+                    return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt);
+                })(intervalNotation)
+                console.log({intervalNotation, steps});
+                const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
+                nextIntervalKey.setAttribute("interval-answer", intervalNotation)
+            } else {
+                console.log("Error: Home key not selected, so unable to build music interval");
+            }
+        }
+        this.releaseKey = ()=>{
+            
+        }
+
+    }
+}
+
+class midiAdapter {
+    constructor() {
+
+    }
+}
+// function notateAndPlay() {
+
+// }
+
+const kbsi = new keyboardSoundInterface();
+document.body.addEventListener('keydown', function(e) {
         // Possible since 2015 to determine even more modifier key / control details. For example, "Left" or "Right" Alt. Misc is "Standard"
         var keyLocationDefs = ["Standard", "Left", "Right", "Numpad", "Mobile", "Joystick"];
         var keyLocation = keyLocationDefs[e.location]; // Web browser api e.location is an integer
@@ -116,36 +182,36 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
         // Major
         if(!e.metaKey && !e.altKey && !e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key)) {
             if(e.key==="w") {
-                console.log("u");
+                kbsi.holdKey("u")
             } else if(e.key==="d") { 
-                console.log("M3");
+                kbsi.holdKey("M3");
             } else if(e.key==="s") { 
-                console.log("P5");
+                kbsi.holdKey("P5");
             } else if(e.key==="a") { 
-                console.log("M7");
+                kbsi.holdKey("M7");
             } else if(e.key==="e") { 
-                console.log("M2");
+                kbsi.holdKey("M2");
             } else if(e.key==="f") { 
-                console.log("P4");
+                kbsi.holdKey("P4");
             } else if(e.key==="c") { 
-                console.log("M6");
+                kbsi.holdKey("M6");
             }
         // Minor
         } else if(!e.metaKey && !e.altKey && e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key.toLowerCase())) {
             if(e.key.toLowerCase()==="w") {
-                console.log("u");
+                kbsi.holdKey("u");
             } else if(e.key.toLowerCase()==="d") { 
-                console.log("m3");
+                kbsi.holdKey("m3");
             } else if(e.key.toLowerCase()==="s") { 
-                console.log("D5");
+                kbsi.holdKey("D5");
             } else if(e.key.toLowerCase()==="a") { 
-                console.log("m7");
+                kbsi.holdKey("m7");
             } else if(e.key.toLowerCase()==="e") { 
-                console.log("m2");
+                kbsi.holdKey("m2");
             } else if(e.key.toLowerCase()==="f") { 
-                console.log("A4");
+                kbsi.holdKey("A4");
             } else if(e.key.toLowerCase()==="c") { 
-                console.log("m6");
+                kbsi.holdKey("m6");
             }
         }
         else if(e.metaKey && !e.altKey && keyLocation==="Left") {
