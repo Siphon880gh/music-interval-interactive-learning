@@ -126,7 +126,7 @@ document.querySelector("#click-mode").addEventListener("click", event=>{
 // Setup modifier keys
 class keyboardSoundInterface {
     constructor() {
-        this.holdKey = (intervalNotation, octaves=0)=>{
+        this.selectKey = (intervalNotation, octaves=0)=>{
             const homeKey = document.querySelector(".root");
             if(homeKey) {
                 clearAllNotations();
@@ -141,6 +141,9 @@ class keyboardSoundInterface {
             } else {
                 console.log("Error: Home key not selected, so unable to build music interval");
             }
+        }
+        this.holdKey = ()=>{
+            
         }
         this.releaseKey = ()=>{
             
@@ -177,54 +180,52 @@ document.body.addEventListener('keydown', function(e) {
             return key.length===1;
         }
         // console.log("Test case minor");
-        // console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length})
+        console.log({mk:e.metaKey, ak:e.altKey, sk: e.shiftKey, key:e.key, keyLength:e.key.length, keyCode:e.keyCode})
 
         // Major
-        if(!e.metaKey && !e.altKey && !e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key)) {
-            if(e.key==="w") {
-                kbsi.holdKey("u")
-            } else if(e.key==="d") { 
-                kbsi.holdKey("M3");
-            } else if(e.key==="s") { 
-                kbsi.holdKey("P5");
-            } else if(e.key==="a") { 
-                kbsi.holdKey("M7");
-            } else if(e.key==="e") { 
-                kbsi.holdKey("M2");
-            } else if(e.key==="f") { 
-                kbsi.holdKey("P4");
-            } else if(e.key==="c") { 
-                kbsi.holdKey("M6");
-            }
-        // Minor
-        } else if(!e.metaKey && !e.altKey && e.shiftKey && e.key.length===1 && "wasdefc".includes(e.key.toLowerCase())) {
-            if(e.key.toLowerCase()==="w") {
-                kbsi.holdKey("u");
-            } else if(e.key.toLowerCase()==="d") { 
-                kbsi.holdKey("m3");
-            } else if(e.key.toLowerCase()==="s") { 
-                kbsi.holdKey("D5");
-            } else if(e.key.toLowerCase()==="a") { 
-                kbsi.holdKey("m7");
-            } else if(e.key.toLowerCase()==="e") { 
-                kbsi.holdKey("m2");
-            } else if(e.key.toLowerCase()==="f") { 
-                kbsi.holdKey("A4");
-            } else if(e.key.toLowerCase()==="c") { 
-                kbsi.holdKey("m6");
-            }
-        }
-        else if(e.metaKey && !e.altKey && keyLocation==="Left") {
-            console.log(1);
-        } else if(e.metaKey && e.altKey && keyLocation==="Left") {
-            console.log(2);
-        } else if(e.metaKey && !e.altKey && keyLocation==="Right") {
-            console.log(3);
-        } else if(e.metaKey && e.altKey && keyLocation==="Right") {
-            console.log(4);
-        }
+        if(e.key.length===1 && "wasdefcWASDEFC".includes(e.key)) {
+            e.preventDefault();
 
-        else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
+            let octaves = 0;
+            if(keyLocation==="Left" && e.altKey && !e.ctrlKey)
+                octaves = -1;
+            else if(keyLocation==="Left" && e.altKey && e.ctrlKey)
+                octaves = -2;
+            else if(keyLocation==="Right" && e.altKey && !e.ctrlKey)
+                octaves = 1;
+            else if(keyLocation==="Right" && e.altKey && e.ctrlKey)
+                octaves = 2;
+
+            if(e.key==="w") { // minor
+                kbsi.selectKey("u", octaves);
+            } else if(e.key==="d") { 
+                kbsi.selectKey("M3", octaves);
+            } else if(e.key==="s") { 
+                kbsi.selectKey("P5", octaves);
+            } else if(e.key==="a") { 
+                kbsi.selectKey("M7", octaves);
+            } else if(e.key==="e") { 
+                kbsi.selectKey("M2", octaves);
+            } else if(e.key==="f") { 
+                kbsi.selectKey("P4", octaves);
+            } else if(e.key==="c") { 
+                kbsi.selectKey("M6", octaves);
+            } else if(e.key==="W") { // Major
+                kbsi.selectKey("u", octaves);
+            } else if(e.key==="D") { 
+                kbsi.selectKey("m3", octaves);
+            } else if(e.key==="S") { 
+                kbsi.selectKey("D5", octaves);
+            } else if(e.key==="A") { 
+                kbsi.selectKey("m7", octaves);
+            } else if(e.key==="E") { 
+                kbsi.selectKey("m2", octaves);
+            } else if(e.key==="F") { 
+                kbsi.selectKey("A4", octaves);
+            } else if(e.key==="C") { 
+                kbsi.selectKey("m6", octaves);
+            }
+        } else if (!e.metaKey && !e.altKey && !e.shiftKey && e.key.toLowerCase()==="h") {
             const clickModeEl = document.querySelector("#click-mode");
             clickModeEl.querySelector(".active")?.classList?.remove("active");
             clickModeEl.querySelector("li#select-root").classList.add("active");
