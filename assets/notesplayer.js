@@ -125,7 +125,7 @@ NotesPlayer.prototype.playing0 = function (note, octave = 0, bpm = 60, durationS
 * 
 */
 
-NotesPlayer.prototype.pause = function (ms) {
+NotesPlayer.prototype.pause = function (ms=1000) {
   console.log(`Pausing for ${ms} milliseconds.`);
 
   const startTime = new Date().getTime();
@@ -138,29 +138,46 @@ NotesPlayer.prototype.pause = function (ms) {
 /**
 * Usage Examples:
 * 
-* BPM 60
-  var player1 = new NotesPlayer();
-  player1.playing("A#", 0, 60);
-* 
-* BPM 120
-  var player1 = new NotesPlayer();
-  player1.playing("A#", 0, 120);
-*
-*
-* 1 second on this beat (ignore BPM)
-  var player1 = new NotesPlayer();
-  player1.playing("A#", 0, null, 1);
+* Same octave
+* var player1 = new NotesPlayer();
+* player1.playing("A#");
 * 
 *
 * Higher octave:
-  var player1 = new NotesPlayer();
-  player1.playing("A#", 1, 60);
+* var player1 = new NotesPlayer();
+* player1.playing("A#", 1);
+* player1.playing("A#", 2);
 *
 *
 * Lower octave:
-  var player1 = new NotesPlayer();
-  player1.playing("A#", 1, 60);
+* var player1 = new NotesPlayer();
+* player1.playing("A#", -1);
+* player1.playing("A#", -2)
 *
-* More examples in README.md
+*
+* BPM 60
+* var player1 = new NotesPlayer();
+* player1.play("A#", 0, 60);
 * 
+* BPM 120
+* var player1 = new NotesPlayer();
+* player1.play("A#", 0, 120);
+*
+*
+* 1 second on this beat (ignore BPM)
+* var player1 = new NotesPlayer();
+* player1.play("A#", 0, null, 1);
+* 
+*
+* Higher octave:
+* var player1 = new NotesPlayer();
+* player1.play("A#", 1, 60);
+*
+*
+* Lower octave:
+* var player1 = new NotesPlayer();
+* player1.play("A#", 1, 60);
+*
+*
+*
 */
