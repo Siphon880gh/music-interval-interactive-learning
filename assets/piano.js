@@ -4,7 +4,9 @@ delete {
         "Setup midi adapter":{},
         "Setup data structures":{},
         "Setup event listeners":{},
-        "Setup modifier keys":{}
+        "Setup modifier keys":{
+            "keyboardSoundInterface": {}
+        }
     },
     "Intervals::":{
         "Calculate interval difference":{},
@@ -49,38 +51,90 @@ document.querySelectorAll(".position").forEach(el=>{
 
                 clearAllNotations();
                 el.setAttribute("interval-answer", intervalNotation)
-                document.querySelector("#result-interval").innerHTML = ((intnt)=>{
-                    switch (intnt) {
-                        case "o":
-                            return "Octave (o)"
+
+                // Set interval result section and play fixed duration note
+                    switch (intervalNotation) {
                         case "u":
-                            return "Unison (u)"
+                            document.querySelector("#result-interval").innerHTML = "Unison (u)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
+                        case "o":
+                            document.querySelector("#result-interval").innerHTML = "Octave (o)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "m2":
-                            return "Minor 2nd (m2)"
+                            document.querySelector("#result-interval").innerHTML = "Minor 2nd (m2)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "M2":
-                            return "Major 2nd (M2)"
+                            document.querySelector("#result-interval").innerHTML = "Major 2nd (M2)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "m3":
-                            return "Minor 3rd (m3)"
+                            document.querySelector("#result-interval").innerHTML = "Minor 3rd (m3)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "M3":
-                            return "Major 3rd (M3)"
+                            document.querySelector("#result-interval").innerHTML = "Major 3rd (M3)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "P4":
-                            return "Perfect 4th (P4)"
+                            document.querySelector("#result-interval").innerHTML = "Perfect 4th (P4)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "D5":
-                            return "Diminished 5th / Augmented 4th (D5/A4)"
+                            document.querySelector("#result-interval").innerHTML = "Augmented 4th / Diminished 5th (A4 / D5)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "P5":
-                            return "Perfect 5th (P5)"
+                            document.querySelector("#result-interval").innerHTML = "Perfect 5th (P5)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "m6":
-                            return "Minor 6th (m6)"
+                            document.querySelector("#result-interval").innerHTML = "Minor 6th (m6)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "M6":
-                            return "Majror 6th (M6)"
+                            document.querySelector("#result-interval").innerHTML = "Major 6th (M6)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "m7":
-                            return "Minor 7th (m7)"
+                            document.querySelector("#result-interval").innerHTML = "Minor 7th (m7)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         case "M7":
-                            return "Major 7th (M7)"
+                            document.querySelector("#result-interval").innerHTML = "Major 7th (M7)";
+                            kbsi.releaseKey();
+                            kbsi.selectKey("graphical", {UIPressed: event.target}); // DO NOT render interval note on graphical as well. Done already.
+                            kbsi.pressKey();
+                            break;
                         default:
-                            return "Error: Interval not found";
+                            console.error("Error: Interval not found");
                     }
-                })(intervalNotation);
 
                 break;
             case "highlight-note":
@@ -145,41 +199,57 @@ class keyboardSoundInterface {
         this.key = "C"
         this.holdingCombos = []; // Eg. [EEEEE, SSSSS, DDDDD] held then let go later. These are actually setInterval ID's for clearInterval when releasing
 
-        this.selectKey = (intervalNotation)=>{
-            // Make sure there's a root / home
-            let homeKey = document.querySelector(".root");
-            if(!homeKey) {
+        this.keyPressedBPM = 60; // How many beats in 60 seconds
+        this.keyPressedNoteValue = 1; // Note Value / Top number of time signature. How long in seconds is 1 beat
 
-                // console.log("Error: Home key not selected, so unable to build music interval");
-                homeKey = document.querySelector(".position:nth-child(4)");
-                homeKey.classList.add("root")
+
+        this.selectKey = (from="keyboard", settings)=>{
+
+            if(from==="graphical") {
+                const {UIPressed} = settings;
+                const [absoluteNote, absoluteOctave] = [UIPressed.getAttribute("note"), UIPressed.getAttribute("octave")];
             }
 
-            // Visually
-            clearAllNotations();
-            const steps = ((intnt)=>{
-                if(intnt==='o') return 0;
-                if(intnt==='A4' || intnt==='D5') return 6 + (this.octave*12);
-                return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt) + (this.octave*12);
-            })(intervalNotation)
-            // console.log({intervalNotation, steps});
-            const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
-            if(nextIntervalKey===-1) {
-                console.log("Error: Out of bound with piano keyboard");
-                return;
-            }
-            console.log(nextIntervalKey)
-            nextIntervalKey.setAttribute("interval-answer", intervalNotation);
+            if(from==="keyboard") {
+                const {intervalNotation, render=true} = settings;
 
-            // Model for midi adapter
-            // Refers HTML: <div id="pos-1" octave="-2" note="A" class="position">1</div>
-            this.key = nextIntervalKey.getAttribute("note");
-            this.absoluteOctave = nextIntervalKey.getAttribute("octave");
-        }
+                // Make sure there's a root / home
+                let homeKey = document.querySelector(".root");
+                if(!homeKey) {
+
+                    // console.log("Error: Home key not selected, so unable to build music interval");
+                    homeKey = document.querySelector(".position:nth-child(4)");
+                    homeKey.classList.add("root")
+                }
+
+                // Visually
+                clearAllNotations();
+                const steps = ((intnt)=>{
+                    if(intnt==='o') return 0;
+                    if(intnt==='A4' || intnt==='D5') return 6 + (this.octave*12);
+                    return ['u','m2','M2','m3','M3','P4','D5','P5', 'm6','M6','m7','M7'].indexOf(intnt) + (this.octave*12);
+                })(intervalNotation)
+                // console.log({intervalNotation, steps});
+                const nextIntervalKey = getNextSibling(steps, homeKey, false); // true, cycling back for index exceeding length
+                if(nextIntervalKey===-1) {
+                    console.error("Error: Out of bound with piano keyboard");
+                    return;
+                }
+                console.log(nextIntervalKey)
+                if(render)
+                    nextIntervalKey.setAttribute("interval-answer", intervalNotation);
+
+                // Model for midi adapter
+                // Refers HTML: <div id="pos-1" octave="-2" note="A" class="position">1</div>
+                this.key = nextIntervalKey.getAttribute("note");
+                this.absoluteOctave = nextIntervalKey.getAttribute("octave");
+                
+            }
+        } // selectKey
         this.holdKey = ()=>{
             function burstSound() {
                 console.log({key:this.key})
-                tunes.play(this.key, this.absoluteOctave)
+                tunes.playing(this.key, this.absoluteOctave)
             }
             burstSound.apply(this);
             this.holdingCombos.push(
@@ -187,9 +257,13 @@ class keyboardSoundInterface {
             )
         }
         this.releaseKey = ()=>{
+            tunes.stopAll();
             this.holdingCombos.forEach((holdingCombo)=>{
                 clearInterval(holdingCombo)
             })
+        }
+        this.pressKey = ()=> {
+            tunes.play(this.key, this.octave, this.keyPressedBPM, this.keyPressedNoteValue)
         }
         /**
          * 
@@ -293,46 +367,46 @@ document.body.addEventListener('keydown', function(e) {
             // console.log({location:e.location,keyLocation,octaves,code:e.code})
 
             if(e.code==="KeyW") { // minor
-                kbsi.selectKey(isMajor?"u":"u"); 
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"u":"u", render:true}); // render interval note on graphical as well
                 kbsi.holdKey();
             } else if(e.code==="KeyA") { 
-                kbsi.selectKey(isMajor?"M7":"m7");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"M7":"m7", render:true});
                 kbsi.holdKey();
             } else if(e.code==="KeyS") { 
-                kbsi.selectKey(isMajor?"P5":"D5");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"P5":"D5", render:true});
                 kbsi.holdKey();
             } else if(e.code==="KeyD") { 
-                kbsi.selectKey(isMajor?"M3":"m3");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"M3":"m3", render:true});
                 kbsi.holdKey();
             } else if(e.code==="KeyE") { 
-                kbsi.selectKey(isMajor?"M2":"m2");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"M2":"m2", render:true});
                 kbsi.holdKey();
             } else if(e.code==="KeyF") { 
-                kbsi.selectKey(isMajor?"P4":"A4");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"P4":"A4", render:true});
                 kbsi.holdKey();
             } else if(e.code==="KeyC") { 
-                kbsi.selectKey(isMajor?"M6":"m6");
+                kbsi.selectKey("keyboard", {intervalNotation:isMajor?"M6":"m6", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit1" || e.code==="Numpad1") { 
-                kbsi.selectKey("u");
+                kbsi.selectKey("keyboard", {intervalNotation:"u", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit2" || e.code==="Numpad2") { 
-                kbsi.selectKey("M2");
+                kbsi.selectKey("keyboard", {intervalNotation:"M2", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit3" || e.code==="Numpad3") { 
-                kbsi.selectKey("M3");
+                kbsi.selectKey("keyboard", {intervalNotation:"M3", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit4" || e.code==="Numpad4") { 
-                kbsi.selectKey("P4");
+                kbsi.selectKey("keyboard", {intervalNotation:"P4", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit5" || e.code==="Numpad5") { 
-                kbsi.selectKey("P5");
+                kbsi.selectKey("keyboard", {intervalNotation:"P5", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit6" || e.code==="Numpad6") { 
-                kbsi.selectKey("M6");
+                kbsi.selectKey("keyboard", {intervalNotation:"M6", render:true});
                 kbsi.holdKey();
             } else if(e.code==="Digit7" || e.code==="Numpad7") { 
-                kbsi.selectKey("M7");
+                kbsi.selectKey("keyboard", {intervalNotation:"M7", render:true});
                 kbsi.holdKey();
             }
 
