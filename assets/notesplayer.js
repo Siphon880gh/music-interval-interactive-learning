@@ -17,6 +17,7 @@
  * 
  * playing method will be more for bursting sound when user holds a key and releases at an undetermined time
  * play method will play sound over a fixed duration based on user or app's setting of BPM and note value aka note duration, assuming all will be qtr notes
+ * It's important to make these distinctions because playing with the time constraint variable could affect if the sound is clipped
  * 
  * 
  */
@@ -45,12 +46,12 @@ class NotesPlayer {
 * @param {float} durationSecondsPerBeat - OPTIONAL. eg. 1, 2, 2.33. If duration is not provided, then we are assuming 4 notes per measure and the duration per beat will be calculated by the BPM; Otherwise, you could pass a duration for that note to override that calculation (and you could pass null to bpm).
 *
 */
-NotesPlayer.prototype.playing = function (note, octave, bpm = 60, durationSecondsPerBeat = 1 / (bpm / 60)) {
+NotesPlayer.prototype.playing = function (note, octave) {
   let context = this.context,
     freq = this.NOTES[note],
     octaveFactor = Math.pow(2, octave);
 
-  console.log(`Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} for ${durationSecondsPerBeat} seconds at ${bpm}bpm`);
+  console.log(`-> Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} while key is held.`);
 
   var o = context.createOscillator();
   o.frequency.setTargetAtTime(freq * octaveFactor, context.currentTime, 0);
@@ -61,12 +62,47 @@ NotesPlayer.prototype.playing = function (note, octave, bpm = 60, durationSecond
   o.stop(context.currentTime + .310);
 }
 
-NotesPlayer.prototype.play = function (note, octave, bpm = 60, durationSecondsPerBeat) {
+/**  
+* @function
+* Play note given musical note, octave (), duration (in seconds with decimals, eg. 2.33), 
+*
+* @param {string} note - musical note (eg. Ab, A, A#)
+* @param {integer} octave - eg. -2, -1, 0, 1, 2 such that 0 represents no octave shift
+* @param {integer} bpm - eg. 60 OR null
+* @param {float} durationSecondsPerBeat - OPTIONAL. eg. 1, 2, 2.33. If duration is not provided, then we are assuming 4 notes per measure and the duration per beat will be calculated by the BPM; Otherwise, you could pass a duration for that note to override that calculation (and you could pass null to bpm).
+*
+*/
+NotesPlayer.prototype.playing0 = function (note, octave = 0) {
   let context = this.context,
     freq = this.NOTES[note],
     octaveFactor = Math.pow(2, octave);
 
-  console.log(`Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} for ${durationSecondsPerBeat} seconds at ${bpm}bpm`);
+  console.log(`-> Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} while key is held.`);
+
+  var o = context.createOscillator();
+  o.frequency.setTargetAtTime(freq * octaveFactor, context.currentTime, 0);
+  g = context.createGain();
+  o.connect(g);
+  g.connect(context.destination);
+  o.start();
+
+  // Formula:
+  // g.gain.setTargetAtTime(0, context.currentTime + SECONDS_OF_PLAYING, TRANSITIONING);
+  // TRANSITIONING is the timeConstraint parameter:
+  // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
+  g.gain.setTargetAtTime(0, context.currentTime + .310, .001);
+}
+
+
+
+NotesPlayer.prototype.play = function (note, octave, bpm = 60, beatRelativeDuration) {
+  let context = this.context,
+    freq = this.NOTES[note],
+    octaveFactor = Math.pow(2, octave);
+
+  let durationSecondsPerBeat=(60/bpm)*beatRelativeDuration;
+
+  console.log(`-> Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} for ${durationSecondsPerBeat} seconds at ${bpm}bpm`);
 
   var o = context.createOscillator();
   o.frequency.setTargetAtTime(freq * octaveFactor, context.currentTime, 0);
@@ -83,37 +119,6 @@ NotesPlayer.prototype.stopAll = function (note, octave, bpm = 60, durationSecond
     sound.stop(0);
   })
   this.arePlaying.length = 0;
-}
-
-/**  
-* @function
-* Play note given musical note, octave (), duration (in seconds with decimals, eg. 2.33), 
-*
-* @param {string} note - musical note (eg. Ab, A, A#)
-* @param {integer} octave - eg. -2, -1, 0, 1, 2 such that 0 represents no octave shift
-* @param {integer} bpm - eg. 60 OR null
-* @param {float} durationSecondsPerBeat - OPTIONAL. eg. 1, 2, 2.33. If duration is not provided, then we are assuming 4 notes per measure and the duration per beat will be calculated by the BPM; Otherwise, you could pass a duration for that note to override that calculation (and you could pass null to bpm).
-*
-*/
-NotesPlayer.prototype.playing0 = function (note, octave = 0, bpm = 60, durationSecondsPerBeat = 1 / (bpm / 60)) {
-  let context = this.context,
-    freq = this.NOTES[note],
-    octaveFactor = Math.pow(2, octave);
-
-  console.log(`Playing note ${note} at ${octave === 0 ? "same octave" : (octave > 0 ? "+" + octave + " octave" : octave + " octave")} for ${durationSecondsPerBeat} seconds at ${bpm}bpm`);
-
-  var o = context.createOscillator();
-  o.frequency.setTargetAtTime(freq * octaveFactor, context.currentTime, 0);
-  g = context.createGain();
-  o.connect(g);
-  g.connect(context.destination);
-  o.start();
-
-  // Formula:
-  // g.gain.setTargetAtTime(0, context.currentTime + SECONDS_OF_PLAYING, TRANSITIONING);
-  // TRANSITIONING is the timeConstraint parameter:
-  // https://developer.mozilla.org/en-US/docs/Web/API/AudioParam/setTargetAtTime
-  g.gain.setTargetAtTime(0, context.currentTime + .310, .001);
 }
 
 /**  

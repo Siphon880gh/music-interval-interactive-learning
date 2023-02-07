@@ -202,15 +202,17 @@ class keyboardSoundInterface {
         this.key = "C"
         this.holdingCombos = []; // Eg. [EEEEE, SSSSS, DDDDD] held then let go later. These are actually setInterval ID's for clearInterval when releasing
 
-        this.keyPressedBPM = 60; // How many beats in 60 seconds
-        this.keyPressedNoteValue = 1; // Note Value / Top number of time signature. How long in seconds is 1 beat
+        this.keyPressedBPM = document.querySelector("#set-bpm")?.value || 120; // How many beats in 60 seconds
+        this.keyPressedNoteValue = 1 | document.querySelector("#set-note-value")?.value || 0.25; // Note Value / Top number of time signature. Multiply that 1 beat in the bpm for the duration in second.
 
 
         this.selectKey = (from="keyboard", settings)=>{
 
             if(from==="graphical") {
                 const {UIPressed} = settings;
-                const [absoluteNote, absoluteOctave] = [UIPressed.getAttribute("note"), UIPressed.getAttribute("octave")];
+                const [note, octave] = [UIPressed.getAttribute("note"), UIPressed.getAttribute("octave")];
+                this.note = note;
+                this.octave = parseFloat(octave);
             }
 
             if(from==="keyboard") {
@@ -430,12 +432,21 @@ document.body.addEventListener('keydown', function(e) {
 
 // Setup graphical keyboard
 // Sliders
-function updateNumberPreview(el) {
+function updateSetting(el) {
     el.nextElementSibling.value = el.value
+    console.log(el.id)
+    switch(el.id) {
+        case "set-bpm":
+            kbsi.keyPressedBPM = parseFloat(el.value);
+            break;
+        case "set-note-value":
+            kbsi.keyPressedNoteValue = parseFloat(el.value);
+            break;
+    }
 
 }
 document.querySelectorAll("#set-bpm, #set-note-value").forEach(slider=>{
-    updateNumberPreview(slider)
+    updateSetting(slider)
 })
 
 // Calculate interval difference

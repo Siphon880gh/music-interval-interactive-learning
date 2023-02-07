@@ -66,12 +66,12 @@
             <article class="settings-container">
                 <section class="float-left">
                     <label class="float-left" for="set-bpm">BPM</label>
-                    <input class="float-left" id="set-bpm" type="range" min="20" max="180" value="120" oninput="updateNumberPreview(event.target)">
+                    <input class="float-left" id="set-bpm" type="range" min="20" max="180" value="120" oninput="updateSetting(event.target)">
                     <input class="float-left" type="text" disabled/>
                 </section>
                 <section class="float-right">
-                    <label class="float-left" for="set-note-value">Note Value (Secs)</label>
-                    <input class="float-left" id="set-note-value" class="float-right" type="range" min="0.06" max=".25" value="120" step=".01" class="slider" oninput="updateNumberPreview(event.target)">
+                    <label class="float-left" for="set-note-value">Note Value (1 beat duration relative to bpm)</label>
+                    <input class="float-left" id="set-note-value" class="float-right" type="range" min="0.06" max="4" value=".25" step=".01" class="slider" oninput="updateSetting(event.target)">
                     <input class="float-left" type="text" disabled/>
                 </section>
             </article>
@@ -120,8 +120,8 @@
         <p></p>
         <span>When I click a key:</span><br/>
         <ul>
-            <li id="select-root" class="active"><b><i class="fa fa-home"></i></b> Select Root (<b>h</b>ome)</li>
-            <li id="get-interval"><i class="fa fa-signal"></i> Get <b>I</b>nterval</li>
+            <li id="select-root"><b><i class="fa fa-home"></i></b> Select Root (<b>h</b>ome)</li>
+            <li id="get-interval" class="active"><i class="fa fa-signal"></i> Get <b>I</b>nterval</li>
             <li id="highlight-note"><i class="fa fa-highlighter"></i> Highlight <b>n</b>ote</li>
         </ul>
     </nav>
