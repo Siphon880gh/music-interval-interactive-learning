@@ -14,6 +14,40 @@ body {
     padding-top: 10px;
 }
 
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.clearleft {
+    clear: left;
+}
+
+#piano-wrapper {
+    width: 803px;
+    margin: 0 auto;
+}
+
+#piano-wrapper #piano-settings {
+    visibility: hidden;
+    max-height: 0;
+    text-align: right;
+    transition: max-height 100ms linear;
+}
+
+#piano-wrapper:hover #piano-settings {
+    visibility: visible;
+    max-height: 60px;
+    margin-bottom: 10px;
+}
+
 #piano {
     width: 803px;
     height: 215px;
@@ -214,6 +248,17 @@ body {
 
 .position:nth-child(38) {
     width: 22px;
+}
+
+
+/* Piano settings */
+
+.settings-container {
+    width: 803px;
+}
+
+.settings-container input[type=text] {
+    width: 4ch;
 }
 
 #legend-interval-shortcuts {

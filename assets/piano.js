@@ -5,7 +5,10 @@ delete {
         "Setup data structures":{},
         "Setup event listeners":{},
         "Setup modifier keys":{
-            "keyboardSoundInterface": {}
+            "keyboardSoundInterface": {},
+        },
+        "Setup graphical keyboard":{
+            "Sliders": {}
         }
     },
     "Intervals::":{
@@ -296,7 +299,7 @@ const kbsi = new keyboardSoundInterface();
 //     kbsi.eyesBackToRootOctave();
 // });
 document.body.addEventListener('keyup', function(e) {
-    console.log("RELEASED KEY: " + e.key)
+    console.log("Released key: " + e.key)
     kbsi.releaseKey();
 });
 
@@ -424,6 +427,16 @@ document.body.addEventListener('keydown', function(e) {
             clickModeEl.querySelector("li#highlight-note").classList.add("active");
         }
 }); // Modifier keys
+
+// Setup graphical keyboard
+// Sliders
+function updateNumberPreview(el) {
+    el.nextElementSibling.value = el.value
+
+}
+document.querySelectorAll("#set-bpm, #set-note-value").forEach(slider=>{
+    updateNumberPreview(slider)
+})
 
 // Calculate interval difference
 // Test console.log: 1,2->1

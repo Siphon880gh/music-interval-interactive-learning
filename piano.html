@@ -21,45 +21,62 @@
 <body>
 
     <!-- These octaves are not relative to user's chosen key/root but to middle C, for the purpose of translating into numeric pitches for MIDI Adapter -->
-    <div id="piano">
-        <div id="pos-1" octave="-2" note="A" class="position">1</div>
-        <div id="pos-2" octave="-2" note="A#" class="position">2</div>
-        <div id="pos-3" octave="-2" note="B" class="position">3</div>
-        <div id="pos-4" octave="-1" note="C" class="position">4</div>
-        <div id="pos-5" octave="-1" note="C#" class="position">5</div>
-        <div id="pos-6" octave="-1" note="D" class="position">6</div>
-        <div id="pos-7" octave="-1" note="D#" class="position">7</div>
-        <div id="pos-8" octave="-1" note="E" class="position">8</div>
-        <div id="pos-9" octave="-1" note="F" class="position">9</div>
-        <div id="pos-10" octave="-1" note="F#" class="position">10</div>
-        <div id="pos-11" octave="-1" note="G" class="position">11</div>
-        <div id="pos-12" octave="-1" note="G#" class="position">12</div>
-        <div id="pos-13" octave="-1" note="A" class="position">13</div>
-        <div id="pos-14" octave="-1" note="A#" class="position">14</div>
-        <div id="pos-15" octave="-1" note="B" class="position">15</div>
-        <div id="pos-16" octave="0" note="C" class="position">16</div>
-        <div id="pos-17" octave="0" note="C#" class="position">17</div>
-        <div id="pos-18" octave="0" note="D" class="position">18</div>
-        <div id="pos-19" octave="0" note="D#" class="position">19</div>
-        <div id="pos-20" octave="0" note="E" class="position">20</div>
-        <div id="pos-21" octave="0" note="F" class="position">21</div>
-        <div id="pos-22" octave="0" note="F#" class="position">22</div>
-        <div id="pos-23" octave="0" note="G" class="position">23</div>
-        <div id="pos-24" octave="0" note="G#" class="position">24</div>
-        <div id="pos-25" octave="0" note="A" class="position">25</div>
-        <div id="pos-26" octave="0" note="A#" class="position">26</div>
-        <div id="pos-27" octave="0" note="B" class="position">27</div>
-        <div id="pos-28" octave="1" note="C" class="position">28</div>
-        <div id="pos-29" octave="1" note="C#" class="position">29</div>
-        <div id="pos-30" octave="1" note="D" class="position">30</div>
-        <div id="pos-31" octave="1" note="D#" class="position">31</div>
-        <div id="pos-32" octave="1" note="E" class="position">32</div>
-        <div id="pos-33" octave="1" note="F" class="position">33</div>
-        <div id="pos-34" octave="1" note="F#" class="position">34</div>
-        <div id="pos-35" octave="1" note="G" class="position">35</div>
-        <div id="pos-36" octave="1" note="G#" class="position">36</div>
-        <div id="pos-37" octave="1" note="A" class="position">37</div>
-        <div id="pos-38" octave="1" note="A#" class="position">38</div>
+    <div id="piano-wrapper">
+        <div id="piano">
+            <div id="pos-1" octave="-2" note="A" class="position">1</div>
+            <div id="pos-2" octave="-2" note="A#" class="position">2</div>
+            <div id="pos-3" octave="-2" note="B" class="position">3</div>
+            <div id="pos-4" octave="-1" note="C" class="position">4</div>
+            <div id="pos-5" octave="-1" note="C#" class="position">5</div>
+            <div id="pos-6" octave="-1" note="D" class="position">6</div>
+            <div id="pos-7" octave="-1" note="D#" class="position">7</div>
+            <div id="pos-8" octave="-1" note="E" class="position">8</div>
+            <div id="pos-9" octave="-1" note="F" class="position">9</div>
+            <div id="pos-10" octave="-1" note="F#" class="position">10</div>
+            <div id="pos-11" octave="-1" note="G" class="position">11</div>
+            <div id="pos-12" octave="-1" note="G#" class="position">12</div>
+            <div id="pos-13" octave="-1" note="A" class="position">13</div>
+            <div id="pos-14" octave="-1" note="A#" class="position">14</div>
+            <div id="pos-15" octave="-1" note="B" class="position">15</div>
+            <div id="pos-16" octave="0" note="C" class="position">16</div>
+            <div id="pos-17" octave="0" note="C#" class="position">17</div>
+            <div id="pos-18" octave="0" note="D" class="position">18</div>
+            <div id="pos-19" octave="0" note="D#" class="position">19</div>
+            <div id="pos-20" octave="0" note="E" class="position">20</div>
+            <div id="pos-21" octave="0" note="F" class="position">21</div>
+            <div id="pos-22" octave="0" note="F#" class="position">22</div>
+            <div id="pos-23" octave="0" note="G" class="position">23</div>
+            <div id="pos-24" octave="0" note="G#" class="position">24</div>
+            <div id="pos-25" octave="0" note="A" class="position">25</div>
+            <div id="pos-26" octave="0" note="A#" class="position">26</div>
+            <div id="pos-27" octave="0" note="B" class="position">27</div>
+            <div id="pos-28" octave="1" note="C" class="position">28</div>
+            <div id="pos-29" octave="1" note="C#" class="position">29</div>
+            <div id="pos-30" octave="1" note="D" class="position">30</div>
+            <div id="pos-31" octave="1" note="D#" class="position">31</div>
+            <div id="pos-32" octave="1" note="E" class="position">32</div>
+            <div id="pos-33" octave="1" note="F" class="position">33</div>
+            <div id="pos-34" octave="1" note="F#" class="position">34</div>
+            <div id="pos-35" octave="1" note="G" class="position">35</div>
+            <div id="pos-36" octave="1" note="G#" class="position">36</div>
+            <div id="pos-37" octave="1" note="A" class="position">37</div>
+            <div id="pos-38" octave="1" note="A#" class="position">38</div>
+        </div>
+        <div id="piano-settings">
+            <article class="settings-container">
+                <section class="float-left">
+                    <label class="float-left" for="set-bpm">BPM</label>
+                    <input class="float-left" id="set-bpm" type="range" min="20" max="180" value="120" oninput="updateNumberPreview(event.target)">
+                    <input class="float-left" type="text" disabled/>
+                </section>
+                <section class="float-right">
+                    <label class="float-left" for="set-note-value">Note Value (Secs)</label>
+                    <input class="float-left" id="set-note-value" class="float-right" type="range" min="0.06" max=".25" value="120" step=".01" class="slider" oninput="updateNumberPreview(event.target)">
+                    <input class="float-left" type="text" disabled/>
+                </section>
+            </article>
+            <div class="clearfix"></div>
+        </div>
     </div>
 
     <!-- Alternately: Mouseover mechanism for changing octaves. Maybe for Guitar later. -->
